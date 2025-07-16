@@ -10,9 +10,13 @@ import {
 
 import auth from '@react-native-firebase/auth';
 
-import { useUser } from '../../contexts/UserContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store';
+import { clearUser } from '../../store/userSlice';
 
 const SettingsScreen = ({ navigation }: any) => {
+    const userInfo = useSelector((state: RootState) => state.user.userInfo);
+    const dispatch = useDispatch<AppDispatch>();
 
     const settingsData = [
         {
@@ -40,7 +44,7 @@ const SettingsScreen = ({ navigation }: any) => {
     const handleLogout = async () => {
         try {
             await auth().signOut();
-            setUserInfo(null); // clear user context
+            dispatch(clearUser());
             console.log('✅ Logged out');
             // Optional: navigate to login screen if not using auth listener
         } catch (err) {
@@ -48,7 +52,8 @@ const SettingsScreen = ({ navigation }: any) => {
         }
     };
 
-    const { userInfo, setUserInfo } = useUser();
+
+
 
     return (
         <View style={styles.container}>

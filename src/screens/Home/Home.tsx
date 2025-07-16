@@ -7,7 +7,9 @@ import firestore from '@react-native-firebase/firestore';
 
 import { spacing, typography, ColorTheme, useTheme } from '../../theme';
 import WelcomeText from '../../compoments/Text/WelcomeText';
-import { useUser } from '../../contexts/UserContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
+
 
 type Props = NativeStackScreenProps<any, any>;
 
@@ -27,13 +29,13 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     //         });
     //     return unsubscribe; // cleanup
     // }, []);
-    const { userInfo } = useUser();
+    const user = useSelector((state: RootState) => state.user.userInfo);
     return (
 
 
         <View style={[styles.container, { backgroundColor: colors.background }]}>
-            {userInfo ? (
-                <WelcomeText user={userInfo?.name ?? 'User'} />
+            {user ? (
+                <WelcomeText user={user?.name ?? 'User'} />
             ) : null}
             <Text>Home!</Text>
         </View>

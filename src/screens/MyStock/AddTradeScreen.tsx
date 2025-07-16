@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, Button, StyleSheet, Alert } from "react-native";
 import firestore, { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
-import { useUser } from "../../contexts/UserContext";
 import { StockTrade } from "../../types/StockTrade";
 import FillButton from "../../compoments/Button/FillButton";
 import { radius } from "../../theme";
 import HorizontalTitleTextInput from "../../compoments/TextInput/HorizontalTitleTextInput";
 import DatePickerField from "../../compoments/DatePicker/DatePickerField";
-import SymbolPickerField from "../../compoments/TextInput/PickerField";
 import PickerField from "../../compoments/TextInput/PickerField";
 import BottomSheetPicker from "../../compoments/BottomSheet/BottomSheetPicker";
 import { BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 const AddTradeScreen = ({ navigation }: any) => {
     const getDefaultTime = () => {
@@ -20,7 +20,7 @@ const AddTradeScreen = ({ navigation }: any) => {
     }
     const bottomSheetRef = useRef<BottomSheetModal>(null);
 
-    const { userInfo } = useUser();
+    const userInfo = useSelector((state: RootState) => state.user.userInfo);
     const [symbolQuery, setSymbolQuery] = useState("");
     const [symbolDetailsResults, setSymbolDetailsResults] = useState<FirebaseFirestoreTypes.DocumentSnapshot[]>([]);
     const [symbolResults, setSymbolResults] = useState<string[]>([]);

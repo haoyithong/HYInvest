@@ -3,10 +3,11 @@ import { View, Text, Button, StyleSheet, Alert, ScrollView } from 'react-native'
 import DocumentPicker from 'react-native-document-picker';
 import Papa from 'papaparse';
 import firestore from '@react-native-firebase/firestore';
-import { useUser } from '../../contexts/UserContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store';
 
 const ImportCSVScreen = () => {
-    const { userInfo } = useUser();
+    const userInfo = useSelector((state: RootState) => state.user.userInfo);
     const [csvData, setCsvData] = useState<any[]>([]);
 
     const handleImportCSV = async () => {

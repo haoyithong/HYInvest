@@ -3,13 +3,17 @@ import { View, Alert, StyleSheet, Button, ScrollView, SafeAreaView, KeyboardAvoi
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
-import { useUser } from '../../contexts/UserContext';
 import CustomTextInput from '../../compoments/TextInput/CustomTextInput';
 import CustomButton from '../../compoments/Button/CustomButton';
 import BottomButton from '../../compoments/Button/BottomButton';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store';
+import { setUserInfo } from '../../store/userSlice';
 
 const EditProfileScreen = () => {
-    const { userInfo, setUserInfo } = useUser();
+    const userInfo = useSelector((state: RootState) => state.user.userInfo);
+    const dispatch = useDispatch<AppDispatch>();
+
     const [name, setName] = useState('');
     const navigation = useNavigation();
     const uid = auth().currentUser?.uid;
@@ -34,10 +38,10 @@ const EditProfileScreen = () => {
             });
 
             // ✅ Update global user context
-            setUserInfo({
+            dispatch(setUserInfo({
                 ...userInfo!,
                 name: trimmedName,
-            });
+            }));
 
             Alert.alert('Success', 'Name updated!');
             navigation.goBack(); // 👈 go back after save
