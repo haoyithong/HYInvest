@@ -4,13 +4,16 @@ import { NavigationContainer } from '@react-navigation/native';
 import { spacing, typography } from '../../theme';
 
 import HomeNavigator from '../../navigation/HomeNavigator';
+import React from 'react';
+import { store } from '../../store';
+import { Provider, useDispatch } from 'react-redux';
 
 export default function HomeTabbarScreen() {
 
     return (
-        // <NavigationContainer>
-        <HomeNavigator />
-        // </NavigationContainer>
+        <Provider store={store}>
+            <HomeNavigator />
+        </Provider >
     );
 }
 

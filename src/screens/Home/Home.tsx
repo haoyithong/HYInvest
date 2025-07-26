@@ -7,37 +7,45 @@ import firestore from '@react-native-firebase/firestore';
 
 import { spacing, typography, ColorTheme, useTheme } from '../../theme';
 import WelcomeText from '../../compoments/Text/WelcomeText';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+
+import { RootState, AppDispatch } from '../../store';
+import { useSelector, useDispatch } from 'react-redux';
+import { TradeSummaryItem } from '../../types/TradeSummaryItem';
+import { fetchTradesThunk, fetchTradeSummary } from '../../store/trade.slice';
+
 
 
 type Props = NativeStackScreenProps<any, any>;
 
 const HomeScreen: React.FC<Props> = ({ navigation }) => {
     const { colors } = useTheme();
-    // const [user, setUser] = useState<any>(null);
-    // const [userInfo, setUserInfo] = useState<any>(null);
-
-    // useEffect(() => {
-    //     const unsubscribe = firestore()
-    //         .collection('users')
-    //         .doc(auth().currentUser?.uid)
-    //         .onSnapshot(doc => {
-    //             if (doc.exists()) {
-    //                 setUserInfo(doc.data());
-    //             }
-    //         });
-    //     return unsubscribe; // cleanup
-    // }, []);
     const user = useSelector((state: RootState) => state.user.userInfo);
+
+    const dispatch = useDispatch<AppDispatch>();
+    const uid = useSelector((state: RootState) => state.user.userInfo?.uid);
+    const trade = useSelector((state: RootState) => state.trade.trades);
+    const summary = useSelector((state: RootState) => state.trade.summary);
+
+    const totalRealized = summary.reduce((acc, item) => acc + item.realized, 0);
+    const totalRemainingCost = summary.reduce((acc, item) => acc + item.quantity * item.avgBuyPrice, 0);
+
+    useEffect(() => {
+        if (uid) {
+            dispatch(fetchTradesThunk(uid));
+            dispatch(fetchTradeSummary());
+        }
+    }, [uid]);
+
     return (
 
 
         <View style={[styles.container, { backgroundColor: colors.background }]}>
-            {user ? (
-                <WelcomeText user={user?.name ?? 'User'} />
-            ) : null}
-            <Text>Home!</Text>
+
+            <View style={{ padding: 16, backgroundColor: '#f0f0f0', borderRadius: 8 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Total Summary</Text>
+                <Text>Total Realized P/L: {totalRealized.toFixed(2)}</Text>
+                <Text>Total Remaining Cost: {totalRemainingCost.toFixed(2)}</Text>
+            </View>
         </View>
     );
 }

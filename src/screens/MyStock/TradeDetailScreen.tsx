@@ -6,33 +6,18 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import { StockTrade } from '../../types/StockTrade';
 import { PRICE_DECIMAL_PRECISION } from '../../config/constants';
 
-type TradeDetailRouteProp = RouteProp<{ TradeDetail: { symbol: string } }, 'TradeDetail'>;
 
-interface Trade extends StockTrade {
-    id: string;
-}
+import { RootState, AppDispatch } from '../../store';
+import { useSelector, useDispatch } from 'react-redux';
 
 
 // const TradeDetailScreen: React.FC = () => {
 const TradeDetailScreen = ({ route }: any) => {
     // const route = useRoute<TradeDetailRouteProp>();
     const { symbol } = route.params;
-    const [trades, setTrades] = useState<Trade[]>([]);
+    const trades = useSelector((state: RootState) => state.trade.trades);
+    const filteredTrades = trades.filter(trade => trade.symbol === symbol);
     let decimalPrecision = PRICE_DECIMAL_PRECISION
-
-    useEffect(() => {
-        const fetchTrades = async () => {
-            const snapshot = await firestore()
-                .collection('trades')
-                .where('symbol', '==', symbol)
-                .orderBy('tradeDate')
-                .get();
-            const tradeList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as StockTrade }));
-            setTrades(tradeList);
-        };
-
-        fetchTrades();
-    }, [symbol]);
 
     const renderItem = ({ item }: { item: StockTrade }) => {
         const isBuy = item.tradeType === 'buy';
@@ -56,11 +41,15 @@ const TradeDetailScreen = ({ route }: any) => {
         );
     };
 
+    console.log("All trades:", trades);
+    console.log("Filtered trades:", filteredTrades);
+    console.log("Symbol from route:", symbol);
+
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Trades for {symbol}</Text>
             <FlatList
-                data={trades}
+                data={filteredTrades}
                 keyExtractor={item => item.id}
                 renderItem={renderItem}
             />

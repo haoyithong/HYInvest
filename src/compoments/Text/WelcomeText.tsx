@@ -15,8 +15,8 @@ const WelcomeText: React.FC<Props> = ({ user, style }) => {
             {/* <Text style={[styles.welcome, { backgroundColor: colors.primary }, style]}>
                 Welcome, <Text style={[styles.user, { backgroundColor: colors.primary }, style]}{user}</Text>
             </Text> */}
-            <Text style={[styles.welcome, { backgroundColor: colors.primary }, style]}>
-                Hello, <Text style={[styles.user, { backgroundColor: colors.primary }, style]}>{user}</Text>!
+            <Text style={[styles.welcome, { backgroundColor: colors.primary, color: "#FFF" }, style]}>
+                Hello, <Text style={[styles.user, { backgroundColor: colors.primary, color: "#FFF" }, style]}>{user}</Text>
             </Text>
         </View>
     );

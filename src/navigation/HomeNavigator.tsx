@@ -11,6 +11,9 @@ import SettingScreen from '../screens/Home/Setting';
 import TradeSummaryScreen from '../screens/MyStock/TradeSummaryScreen';
 
 
+import { Provider, useDispatch } from 'react-redux';
+import { store } from '../store';
+
 export default function HomeNavigator() {
 
     const Tab = createBottomTabNavigator();
@@ -21,34 +24,36 @@ export default function HomeNavigator() {
     }
 
     return (
-        <Tab.Navigator
-            screenOptions={({ route }) => ({
-                tabBarIcon: ({ color, size }) => {
-                    let iconName: string;
-                    if (route.name === 'Home') {
-                        iconName = 'home-outline';
-                    } else if (route.name === 'TradeSummary') {
-                        iconName = 'bar-chart-outline';
-                    } else if (route.name === 'Setting') {
-                        iconName = 'settings-outline';
-                    } else {
-                        iconName = 'home-outline';
-                    }
-                    return <Ionicons name={iconName} size={size} color={color} />;
-                },
-                tabBarActiveTintColor: '#007aff',
-                tabBarInactiveTintColor: 'gray',
-            })}
-        >
-            <Tab.Screen
-                name="Home"
-                component={HomeScreen} />
-            <Tab.Screen
-                name="TradeSummary"
-                component={TradeSummaryScreen} />
-            <Tab.Screen
-                name="Setting"
-                component={SettingScreen} />
-        </Tab.Navigator>
+        <Provider store={store}>
+            <Tab.Navigator
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ color, size }) => {
+                        let iconName: string;
+                        if (route.name === 'Home') {
+                            iconName = 'home-outline';
+                        } else if (route.name === 'TradeSummary') {
+                            iconName = 'bar-chart-outline';
+                        } else if (route.name === 'Setting') {
+                            iconName = 'settings-outline';
+                        } else {
+                            iconName = 'home-outline';
+                        }
+                        return <Ionicons name={iconName} size={size} color={color} />;
+                    },
+                    tabBarActiveTintColor: '#007aff',
+                    tabBarInactiveTintColor: 'gray',
+                })}
+            >
+                <Tab.Screen
+                    name="Home"
+                    component={HomeScreen} />
+                <Tab.Screen
+                    name="TradeSummary"
+                    component={TradeSummaryScreen} />
+                <Tab.Screen
+                    name="Setting"
+                    component={SettingScreen} />
+            </Tab.Navigator>
+        </Provider>
     );
 }

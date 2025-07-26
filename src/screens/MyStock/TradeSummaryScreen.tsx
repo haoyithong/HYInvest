@@ -10,7 +10,7 @@ import { RootState, AppDispatch } from '../../store';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { TradeSummaryItem } from '../../types/TradeSummaryItem';
-import { fetchTradeSummary } from '../../store/tradeSlice';
+import { fetchTradeSummary } from '../../store/trade.slice';
 
 
 const TradeSummaryScreen = ({ navigation }: any) => {
@@ -18,13 +18,12 @@ const TradeSummaryScreen = ({ navigation }: any) => {
     const summary = useSelector((state: RootState) => state.trade.summary);
     const uid = useSelector((state: RootState) => state.user.userInfo?.uid);
 
-    const [calculateCommission, setCalculateCommission] = useState(false);
-
     let decimalLength = 2
 
     useEffect(() => {
         if (uid) {
-            dispatch(fetchTradeSummary(uid));
+            console.log("fetchTradeSummary")
+            dispatch(fetchTradeSummary());
         }
     }, [uid]);
 
@@ -33,7 +32,7 @@ const TradeSummaryScreen = ({ navigation }: any) => {
             headerRight: () => (
                 <Button title="Refresh" onPress={() => {
                     if (uid) {
-                        dispatch(fetchTradeSummary(uid));
+                        dispatch(fetchTradeSummary());
                     }
                 }} />
             ),
