@@ -3,12 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { RouteProp, useRoute } from '@react-navigation/native';
-import { StockTrade } from '../../types/StockTrade';
+import { LocalStockTrade, StockTrade } from '../../types/StockTrade';
 import { PRICE_DECIMAL_PRECISION } from '../../config/constants';
-
-
 import { RootState, AppDispatch } from '../../store';
 import { useSelector, useDispatch } from 'react-redux';
+import { formatDateTime } from '../../utils/dateTimeUtils';
 
 
 // const TradeDetailScreen: React.FC = () => {
@@ -19,7 +18,7 @@ const TradeDetailScreen = ({ route }: any) => {
     const filteredTrades = trades.filter(trade => trade.symbol === symbol);
     let decimalPrecision = PRICE_DECIMAL_PRECISION
 
-    const renderItem = ({ item }: { item: StockTrade }) => {
+    const renderItem = ({ item }: { item: LocalStockTrade }) => {
         const isBuy = item.tradeType === 'buy';
         const tradeTypeColor = isBuy ? 'green' : 'red';
 
@@ -33,7 +32,7 @@ const TradeDetailScreen = ({ route }: any) => {
 
                     <View style={styles.tradeContent}>
                         <Text>{item.quantity} @ {item.price.toFixed(decimalPrecision)}</Text>
-                        <Text>Date: {item.tradeDate.toDate().toLocaleDateString()}</Text>
+                        <Text>Date: {formatDateTime(item.tradeDate)}</Text>
                         <Text>Commission: {item.commission}</Text>
                     </View>
                 </View>

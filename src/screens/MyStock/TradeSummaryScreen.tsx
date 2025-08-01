@@ -22,7 +22,6 @@ const TradeSummaryScreen = ({ navigation }: any) => {
 
     useEffect(() => {
         if (uid) {
-            console.log("fetchTradeSummary")
             dispatch(fetchTradeSummary());
         }
     }, [uid]);

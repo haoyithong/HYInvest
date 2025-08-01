@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, Button, StyleSheet, Alert } from "react-native";
-import firestore, { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
-import { StockTrade } from "../../types/StockTrade";
+import { FirestoreStockTrade, LocalStockTrade } from "../../types/StockTrade";
 import FillButton from "../../compoments/Button/FillButton";
 import { radius } from "../../theme";
 import HorizontalTitleTextInput from "../../compoments/TextInput/HorizontalTitleTextInput";
@@ -10,7 +9,16 @@ import PickerField from "../../compoments/TextInput/PickerField";
 import BottomSheetPicker from "../../compoments/BottomSheet/BottomSheetPicker";
 import { BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { AppDispatch, RootState, store } from '../../store';
+
+// import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import firestore, { collection, getDocs, getFirestore, orderBy, query, where, FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+
+import { getApp } from '@react-native-firebase/app';
+import { StockItem } from "../../types/StockItem";
+
+import { useDispatch } from 'react-redux';
+import { addTrade } from "../../store/trade.slice";
 
 const AddTradeScreen = ({ navigation }: any) => {
     const getDefaultTime = () => {
@@ -22,7 +30,7 @@ const AddTradeScreen = ({ navigation }: any) => {
 
     const userInfo = useSelector((state: RootState) => state.user.userInfo);
     const [symbolQuery, setSymbolQuery] = useState("");
-    const [symbolDetailsResults, setSymbolDetailsResults] = useState<FirebaseFirestoreTypes.DocumentSnapshot[]>([]);
+    // const [symbolDetailsResults, setSymbolDetailsResults] = useState<FirebaseFirestoreTypes.DocumentSnapshot[]>([]);
     const [symbolResults, setSymbolResults] = useState<string[]>([]);
     const [selectedSymbol, setSelectedSymbol] = useState("");
     const [tradeType, setTradeType] = useState<"buy" | "sell" | null>("buy");
@@ -32,12 +40,22 @@ const AddTradeScreen = ({ navigation }: any) => {
     const [date, setDate] = useState(new Date());
     const [time, setTime] = useState<Date>(getDefaultTime())
 
+    const dispatch = useDispatch();
+
+    const app = getApp();
+    const db = getFirestore(app);
+    const stockRef = collection(db, 'stocks');
+
     useEffect(() => {
         const fetchSymbols = async () => {
-            const snapshot = await firestore().collection("stocks").get();
-            const symbols = snapshot.docs.map(doc => doc.data().symbol);  // string[]
+            const stockQuery = query(stockRef);
 
-            setSymbolDetailsResults(snapshot.docs);
+            const snapshot = await getDocs(stockQuery);
+            const symbols = snapshot.docs.map(
+                (doc: FirebaseFirestoreTypes.QueryDocumentSnapshot<StockItem>) => {
+                    return doc.data().symbol
+                });
+            console.log(symbols)
             setSymbolResults(symbols);
         };
         fetchSymbols();
@@ -62,7 +80,7 @@ const AddTradeScreen = ({ navigation }: any) => {
 
         const tradeDate = combineDateAndTime(date, time)
 
-        const trade: StockTrade = {
+        const trade: FirestoreStockTrade = {
             userId: userInfo.uid,
             symbol: selectedSymbol,
             tradeType,
@@ -74,14 +92,16 @@ const AddTradeScreen = ({ navigation }: any) => {
             createdAt: firestore.Timestamp.now()
         };
 
+        const dispatch = store.dispatch as AppDispatch;
         try {
-            await firestore().collection("trades").add(trade);
+            await dispatch(addTrade(trade)).unwrap();
             Alert.alert("Success", "Trade added successfully");
             navigation.goBack();
         } catch (e) {
             console.error("Error adding trade:", e);
             Alert.alert("Error", "Failed to add trade");
         }
+
     };
 
     return (

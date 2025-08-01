@@ -20,6 +20,7 @@
     "@react-navigation/native-stack": "^7.3.21",
     "@reduxjs/toolkit": "^2.8.2",
     "@types/papaparse": "^5.3.16",
+    "date-fns": "^4.1.0",
     "metro-react-native-babel-preset": "^0.77.0",
     "papaparse": "^5.5.3",
     "react": "19.1.0",

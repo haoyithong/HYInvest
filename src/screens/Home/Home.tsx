@@ -30,10 +30,19 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     const totalRemainingCost = summary.reduce((acc, item) => acc + item.quantity * item.avgBuyPrice, 0);
 
     useEffect(() => {
-        if (uid) {
-            dispatch(fetchTradesThunk(uid));
-            dispatch(fetchTradeSummary());
-        }
+        if (!uid) return;
+        const fetchData = async () => {
+            try {
+                console.log('home fetchTrade');
+                await dispatch(fetchTradesThunk(uid)).unwrap(); // ✅ wait here
+                console.log('home fetchTradeSummary');
+                dispatch(fetchTradeSummary()); // ✅ runs after fetchTradesThunk finishes
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchData(); // ✅ call the async function
     }, [uid]);
 
     return (
