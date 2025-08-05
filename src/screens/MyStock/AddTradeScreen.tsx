@@ -18,7 +18,7 @@ import { getApp } from '@react-native-firebase/app';
 import { StockItem } from "../../types/StockItem";
 
 import { useDispatch } from 'react-redux';
-import { addTrade } from "../../store/trade.slice";
+import { addTrade } from "../../store/tradeSlice";
 
 const AddTradeScreen = ({ navigation }: any) => {
     const getDefaultTime = () => {

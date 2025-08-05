@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { RootState } from '../store';
+import { RootState } from '.';
 import { LocalStockTrade, FirestoreStockTrade } from '../types/StockTrade';
 import { TradeSummaryItem } from '../types/TradeSummaryItem';
 import { calculateTradeSummary } from '../utils/summary';

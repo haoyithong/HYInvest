@@ -5,10 +5,19 @@ export const typography: Record<string, TextStyle> = {
     fontSize: 16,
     fontWeight: '400',
   },
+  regularBold: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
   title: {
     fontSize: 20,
     fontWeight: '700',
   },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+
   formLabel: {
     fontSize: 16,
     fontWeight: '600',

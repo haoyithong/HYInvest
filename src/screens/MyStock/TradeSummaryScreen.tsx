@@ -10,7 +10,7 @@ import { RootState, AppDispatch } from '../../store';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { TradeSummaryItem } from '../../types/TradeSummaryItem';
-import { fetchTradeSummary } from '../../store/trade.slice';
+import { fetchTradeSummary } from '../../store/tradeSlice';
 
 
 const TradeSummaryScreen = ({ navigation }: any) => {
