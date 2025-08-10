@@ -82,7 +82,7 @@ const HomeScreen: React.FC<Props> = ({ navigation }) => {
     };
 
     return (
-        <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={[styles.container]}>
 
             {/* Summary boxes in a row */}
             <View style={styles.summaryRow}>
@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
+        // backgroundColor: '#fff',
     },
     summaryRow: {
         flexDirection: 'row',
